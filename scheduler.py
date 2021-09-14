@@ -89,7 +89,7 @@ class SaveToCsv(luigi.Task):
         return luigi.LocalTarget('amazon_reviews.csv')
 
     def run(self):
-        db = Pgdb(db = 'reviews', user = 'postgres', passwd = 'postgres123', table = 'details')
+        db = Pgdb(db = 'reviews', user = 'postgres', passwd = '******', table = 'details')
         values = db.fetchall()
         details = {
             'product_name' : [],
