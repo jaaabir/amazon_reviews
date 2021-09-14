@@ -4,7 +4,7 @@ from time import sleep
 
 
 def f_pg_num(driver):
-    num = int(driver.find_elements_by_class_name('s-pagination-item.s-pagination-disabled')[-1].text)
+    num = int(driver.find_elements_by_class_name('s-pagination-disabled')[-1].text)
     return num
 
 def get_prod_links(driver):
@@ -22,8 +22,10 @@ def get_prod_links(driver):
         if review >= 5:
             # href = prod.find_element_by_xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "a-color-base", " " )) and contains(concat( " ", @class, " " ), concat( " ", "a-text-normal", " " ))]').get_attribute('href')
             href = prod.find_element_by_class_name('a-section.a-spacing-none').find_element_by_class_name('a-link-normal.s-no-outline').get_attribute('href')
+            print(href)
             if 'gp/slredirect' not in href:
                 links.append(href)
+            
 
     return links
 
@@ -33,14 +35,14 @@ def get_products(pname, driver):
     print('scraping all product links...')
     all_links = []
     curr_pg_num = 1
-    final_pg_num = 20 if pname == 'laptop' else 7
+    final_pg_num = 20
 
     driver.get(url)
-    sleep(3)
-    # try:
-    #     final_pg_num = f_pg_num(driver)
-    # except selenium.common.exceptions.NoSuchElementException as err:
-    #     print('pagination error reloading the page ...')
+    sleep(5)
+    try:
+        final_pg_num = f_pg_num(driver)
+    except selenium.common.exceptions.NoSuchElementException as err:
+        print('pagination error reloading the page ...')
     #     driver.get(url)
     #     sleep(3)
     #     final_pg_num = f_pg_num(driver)
@@ -51,7 +53,7 @@ def get_products(pname, driver):
         curr_pg_num += 1
         new_url = url.replace('page=1', f'page={curr_pg_num}')
         driver.get(new_url)
-        sleep(3)
+        sleep(5)
         all_links += get_prod_links(driver)
 
     print('finished scraping all product links...')
